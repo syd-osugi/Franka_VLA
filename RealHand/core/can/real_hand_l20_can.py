@@ -77,8 +77,9 @@ class RealHandL20Can:
                 )
             else:
                 raise EnvironmentError("Unsupported platform for CAN interface")
-        except:
+        except Exception as e:
             print("Please insert CAN device",flush=True)
+            raise RuntimeError(f"CAN init failed: {e}") from e
 
         # Initialize data storage
         self.x01, self.x02, self.x03, self.x04 = [[-1] * 5 for _ in range(4)]

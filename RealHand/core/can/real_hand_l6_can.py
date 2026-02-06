@@ -104,7 +104,7 @@ class RealHandL6Can:
             # If any interface attempt fails and raises an exception (including EnvironmentError)
             ColorMsg(msg=f"Fatal error: all CAN interface connection attempts failed or the platform is unsupported. Please check device connections or driver installation and the CAN parameter configuration in the config file.\nError details: {e}", color="red")
             # Keep the raise behavior to pass the error to the caller and prevent the program from continuing
-            raise
+            raise RuntimeError(f"CAN init failed: {e}") from e
 
     def send_frame(self, frame_property, data_list,sleep=0.003):
         """Send a single CAN frame with specified properties and data."""

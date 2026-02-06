@@ -166,8 +166,9 @@ class RealHandL25Can:
                 )
             else:
                 raise EnvironmentError("Unsupported platform for CAN interface")
-        except:
+        except Exception as e:
             print("Please insert CAN device")
+            raise RuntimeError(f"CAN init failed: {e}") from e
 
         # Start receive thread
         self.receive_thread = threading.Thread(target=self.receive_response)

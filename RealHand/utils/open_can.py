@@ -73,15 +73,15 @@ class OpenCan:
             
 
     def is_can_up_sysfs(self, interface="can0"):
-    # Check whether interface directory exists
+        # Check whether interface directory exists
         if not os.path.exists(f"/sys/class/net/{interface}"):
             return False
         # Read interface state
         try:
-            with open(f"/sys/class/net/{interface}/operstate", "r") as f:
-                state = f.read().strip()
-            if state == "up":
-                return True
+            with open(f"/sys/class/net/{interface}/flags", "r", encoding="utf-8") as f:
+                flags = int(f.read().strip(), 16)
+                IFF_UP = 0x1
+                return (flags & IFF_UP) != 0
         except Exception as e:
             print(f"Error reading CAN interface state: {e}")
             return False

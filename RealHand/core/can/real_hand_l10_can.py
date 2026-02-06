@@ -88,9 +88,10 @@ class RealHandL10Can:
                 return can.interface.Bus(channel=channel, interface='pcan', bitrate=baudrate)
             else:
                 raise EnvironmentError("Unsupported platform for CAN interface")
-        except:
+        except Exception as e:
             #print("Please insert CAN device")
             ColorMsg(msg="Warning: Please insert CAN device", color="red")
+            raise RuntimeError(f"CAN init failed: {e}") from e
 
     def send_frame(self, frame_property, data_list,sleep=0.003):
         """Send a single CAN frame with specified properties and data."""
