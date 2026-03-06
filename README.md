@@ -58,8 +58,10 @@ bus = can.interface.Bus(interface="pcan", channel="PCAN_USBBUS1", bitrate=100000
 
 ## Windows GUI Run
 After installing dependencies and the CAN adapter driver:
-1. Open a Command Prompt or PowerShell in the repo root.
-2. Run:
+1. Open RealHand/config/setting.yaml
+2. Change CAN from "can0" to "PCAN_USBBUS1"
+3. Open a Command Prompt or PowerShell in the repo root.
+4. Run:
 ```bash
 $ python3 example/gui_control/gui_control.py
 ```
