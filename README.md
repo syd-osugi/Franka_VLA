@@ -83,23 +83,6 @@ $ python3 example/gui_control/gui_control.py
 
 ```
 
-## L30 CANFD Support (Embedded Libraries)
-L30 uses CANFD and requires `libcanbus.so` and `libusb-1.0.so`. These are bundled in the SDK at:
-
-`RealHand/third_party/canfd/`
-
-If you need a different build (Ubuntu20/ARM/ARM64), replace the files in that folder with the appropriate `libcanbus`/`libusb` binaries for your platform.
-
-System requirements (still needed outside this repo):
-- A compatible USB CANFD adapter with its driver installed.
-- USB device permissions configured (udev rules or run as root).
-
-Set `JOINT: L30` in `RealHand/config/setting.yaml` and run:
-```bash
-$ python3 example/gui_control/gui_control.py
-```
-
-
 ## Related Documentation
 [Real Hand API for Python Document](doc/API-Reference.md)
 [SDK Functions Summary](doc/SDK-Functions-Summary.md) - For more detailed information, refer to this file.
