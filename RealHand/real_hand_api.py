@@ -57,8 +57,11 @@ class RealHandApi:
         if self.hand_joint == "L25":
             from core.can.real_hand_l25_can import RealHandL25Can
             self.hand = RealHandL25Can(can_id=self.hand_id,can_channel=self.can, yaml=self.yaml)
+        if self.hand_joint == "L30":
+            from core.canfd.real_hand_l30_canfd import RealHandL30Canfd
+            self.hand = RealHandL30Canfd(hand_type=self.hand_type)
         # Open can0
-        if sys.platform == "linux" and modbus=="None":
+        if sys.platform == "linux" and modbus=="None" and self.hand_joint != "L30":
             self.open_can = OpenCan(load_yaml=self.yaml)
             self.open_can.open_can(self.can)
             self.is_can = self.open_can.is_can_up_sysfs(interface=self.can)
@@ -97,6 +100,8 @@ class RealHandApi:
         elif self.hand_joint == "L21" and len(pose) == 25:
             self.hand.set_joint_positions(pose)
         elif self.hand_joint == "L25" and len(pose) == 25:
+            self.hand.set_joint_positions(pose)
+        elif self.hand_joint == "L30" and len(pose) == 17:
             self.hand.set_joint_positions(pose)
         else:
             ColorMsg(msg=f"Current RealHand is {self.hand_type}{self.hand_joint}, action sequence is {pose}, does not match", color="red")
@@ -210,6 +215,8 @@ class RealHandApi:
             return self.hand.get_speed()
         elif self.hand_joint == "L25":
             return self.hand.get_speed()
+        elif self.hand_joint == "L30":
+            return self.hand.get_speed()
 
     def get_touch_type(self):
         '''Get touch type'''
@@ -319,7 +326,8 @@ class RealHandApi:
     def show_fun_table(self):
         self.hand.show_fun_table()
     def close_can(self):
-        self.open_can.close_can0()                         
+        if hasattr(self, "open_can"):
+            self.open_can.close_can0()
 
 if __name__ == "__main__":
     hand = RealHandApi(hand_type="right", hand_joint="L10")

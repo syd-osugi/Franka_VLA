@@ -14,6 +14,21 @@ class HandConfig:
 # 常量字典（仅构建一次）
 # ------------------------------------------------------------------
 _HAND_CONFIGS: Dict[str, HandConfig] = {
+    "L30": HandConfig(
+        joint_names=[
+            "Thumb Side Swing", "Thumb Rotation", "Thumb Bend", "Thumb Tip",
+            "Index Side Swing", "Index Base Bend", "Index Tip",
+            "Middle Side Swing", "Middle Base", "Middle Tip",
+            "Ring Side Swing", "Ring Base", "Ring Tip",
+            "Little Side Swing", "Little Base", "Little Tip",
+            "Wrist"
+        ],
+        init_pos=[255] * 17,
+        preset_actions={
+            "Open": [255] * 17,
+            "Fist": [0] * 17
+        }
+    ),
     "L25": HandConfig(
         joint_names=["Thumb base", "Index finger base", "Middle finger base", "Ring finger base", "Little finger base",
                      "Thumb abduction", "Index finger abduction", "Middle finger abduction", "Ring finger abduction", "Little finger abduction",

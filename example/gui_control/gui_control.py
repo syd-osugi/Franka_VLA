@@ -286,11 +286,28 @@ class HandApiManager(QObject):
     def init_api(self):
         """Initialize RealHandApi"""
         try:
+            if self.hand_joint == "L30":
+                self._validate_l30_canfd_deps()
             self.api = RealHandApi(hand_joint=self.hand_joint, hand_type=self.hand_type, modbus=self.modbus, can=self.can)
             self.status_updated.emit("info", f"Hand API initialized successfully: {self.hand_type} {self.hand_joint}")
         except Exception as e:
             self.status_updated.emit("error", f"API initialization failed: {str(e)}")
             raise
+
+    def _validate_l30_canfd_deps(self):
+        base_dir = os.path.abspath(os.path.join(os.path.dirname(__file__), "..", "..", "RealHand", "third_party", "canfd"))
+        libcanbus = os.path.join(base_dir, "libcanbus.so")
+        libusb = os.path.join(base_dir, "libusb-1.0.so")
+        missing = []
+        if not os.path.exists(libcanbus):
+            missing.append(libcanbus)
+        if not os.path.exists(libusb):
+            missing.append(libusb)
+        if missing:
+            self.status_updated.emit(
+                "error",
+                f"L30 CANFD deps missing: {', '.join(missing)}. Install canfd libs into RealHand/third_party/canfd."
+            )
 
     def update_matrix_data(self):
         """Update matrix data"""
@@ -360,6 +377,8 @@ class HandApiManager(QObject):
                 joint_len = 7
             elif self.hand_joint == "L10":
                 joint_len = 10
+            elif self.hand_joint == "L30":
+                joint_len = 17
             else:
                 joint_len = 5
                 
@@ -385,6 +404,8 @@ class HandApiManager(QObject):
                 joint_len = 7
             elif self.hand_joint == "L10":
                 joint_len = 10
+            elif self.hand_joint == "L30":
+                joint_len = 17
             else:
                 joint_len = 5
                 
