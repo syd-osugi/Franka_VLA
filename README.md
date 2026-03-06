@@ -12,7 +12,7 @@ RealHand Python SDK
 
 | Name | Version | Link |
 | --- | --- | --- |
-| Python SDK | ![SDK Version](https://img.shields.io/badge/SDK%20Version-V3.0.1-brightgreen?style=flat-square) ![Python 3.8+](https://img.shields.io/badge/Python-3.8%2B-blue?style=flat-square&logo=python&logoColor=white) ![Windows 11](https://img.shields.io/badge/OS-Windows%2011-0078D4?style=flat-square&logo=windows&logoColor=white) ![Ubuntu 20.04+](https://img.shields.io/badge/OS-Ubuntu%2020.04%2B-E95420?style=flat-square&logo=ubuntu&logoColor=white) ![Ubuntu 22.04+](https://img.shields.io/badge/OS-Ubuntu%2022.04%2B-E95420?style=flat-square&logo=ubuntu&logoColor=white) | [![GitHub](https://img.shields.io/badge/GitHub-grey?logo=github&style=flat-square)](https://github.com/XXXXXXDU/realhand-python-sdk) |
+| Python SDK | ![SDK Version](https://img.shields.io/badge/SDK%20Version-V3.0.1-brightgreen?style=flat-square) ![Python 3.8+](https://img.shields.io/badge/Python-3.8%2B-blue?style=flat-square&logo=python&logoColor=white) ![Windows 11](https://img.shields.io/badge/OS-Windows%2011-0078D4?style=flat-square&logo=windows&logoColor=white) ![Ubuntu 20.04+](https://img.shields.io/badge/OS-Ubuntu%2020.04%2B-E95420?style=flat-square&logo=ubuntu&logoColor=white) ![Ubuntu 22.04+](https://img.shields.io/badge/OS-Ubuntu%2022.04%2B-E95420?style=flat-square&logo=ubuntu&logoColor=white) | [![GitHub](https://img.shields.io/badge/GitHub-grey?logo=github&style=flat-square)](https://github.com/realhand-dev/realhand-python-sdk) |
 | ROS SDK | ![SDK Version](https://img.shields.io/badge/SDK%20Version-V3.0.1-brightgreen?style=flat-square) ![Python 3.8+](https://img.shields.io/badge/Python-3.8%2B-blue?style=flat-square&logo=python&logoColor=white) ![Ubuntu 20.04+](https://img.shields.io/badge/OS-Ubuntu%2020.04%2B-E95420?style=flat-square&logo=ubuntu&logoColor=white) ![ROS Noetic](https://img.shields.io/badge/ROS-Noetic-009624?style=flat-square&logo=ros) | [![GitHub](https://img.shields.io/badge/GitHub-grey?logo=github&style=flat-square)]() |
 | ROS2 SDK | ![SDK Version](https://img.shields.io/badge/SDK%20Version-V3.0.1-brightgreen?style=flat-square) ![Python 3.11](https://img.shields.io/badge/Python-3.11-3776AB?style=flat-square&logo=python&logoColor=white) ![Ubuntu 24.04](https://img.shields.io/badge/OS-Ubuntu%2024.04-E95420?style=flat-square&logo=ubuntu&logoColor=white) ![ROS 2 Jazzy](https://img.shields.io/badge/ROS%202-Jazzy-00B3E6?style=flat-square&logo=ros) ![Windows 11](https://img.shields.io/badge/OS-Windows%2011-0078D4?style=flat-square&logo=windows&logoColor=white) | [![GitHub 仓库](https://img.shields.io/badge/GitHub-grey?logo=github&style=flat-square)](https://github.com/XXXXXXDU/realhand-ros2-sdk) |
 
@@ -22,13 +22,46 @@ RealHand Python SDK
 - download
 
 ```bash
-$ git clone https://github.com/XXXXXXDU/realhand-ros2-sdk.git
+$ git clone https://github.com/realhand-dev/realhand-python-sdk.git
 ```
 
 - install
 
 ```bash
 $ pip3 install -r requirements.txt
+```
+
+## PCAN (Regular CAN) Driver Install Guide for Windows
+1. Download the PEAK driver package
+Open: `https://www.peak-system.com/quick/DL-Driver-E`
+2. Extract and run the installer
+Unzip: `PEAK-System_Driver-Setup.zip`
+Run: `PeakOemDrv.exe`
+Follow the prompts (installs the device driver and PCAN-Basic DLLs)
+3. Plug in the adapter
+Connect the PCAN USB adapter after installation
+Windows should detect it and finish driver setup
+Device Manager should show PCAN-USB (not Unknown Device)
+4. Verify (optional)
+Open PCAN-View (if installed)
+Confirm the channel appears (e.g., `PCAN_USBBUS1`)
+
+If it still shows “Unknown Device”:
+- Re-run the installer and ensure PCAN-Basic is selected.
+- Try a different USB port and reboot if prompted.
+
+Python example (python-can):
+```python
+import can
+bus = can.interface.Bus(interface="pcan", channel="PCAN_USBBUS1", bitrate=1000000)
+```
+
+## Windows GUI Run
+After installing dependencies and the CAN adapter driver:
+1. Open a Command Prompt or PowerShell in the repo root.
+2. Run:
+```bash
+$ python3 example/gui_control/gui_control.py
 ```
 
 ## RS485 Protocol Switching (Currently supports O6/L6/L10. For other models, please refer to the MODBUS RS485 protocol document)
@@ -48,6 +81,22 @@ $ sudo chmod 777 /dev/ttyUSB0
 # GUI control example
 $ python3 example/gui_control/gui_control.py
 
+```
+
+## L30 CANFD Support (Embedded Libraries)
+L30 uses CANFD and requires `libcanbus.so` and `libusb-1.0.so`. These are bundled in the SDK at:
+
+`RealHand/third_party/canfd/`
+
+If you need a different build (Ubuntu20/ARM/ARM64), replace the files in that folder with the appropriate `libcanbus`/`libusb` binaries for your platform.
+
+System requirements (still needed outside this repo):
+- A compatible USB CANFD adapter with its driver installed.
+- USB device permissions configured (udev rules or run as root).
+
+Set `JOINT: L30` in `RealHand/config/setting.yaml` and run:
+```bash
+$ python3 example/gui_control/gui_control.py
 ```
 
 
