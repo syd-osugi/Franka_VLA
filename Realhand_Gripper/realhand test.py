@@ -1,3 +1,5 @@
+import time
+
 from RealHand.real_hand_api import RealHandApi
 from RealHand.utils.load_write_yaml import LoadWriteYaml
 # def main():
@@ -64,10 +66,11 @@ force_state = real_hand.get_force()
 print(f"force state {force_state}")
 
 # send position via matrix for position
-position = [250, 250, 250, 250, 250, 250]
-positionone = [0, 18, 255, 0, 0, 0]
-real_hand.finger_move(position)
-#real_hand.finger_move(positionone)
+position_pointing = [0, 18, 255, 0, 0, 0]
+real_hand.finger_move(position_pointing)
+time.sleep(2) # allow for hand to move before begining next move
+position_openhand = [250, 250, 250, 250, 250, 250]
+real_hand.finger_move(position_openhand) # always end in open position for convenience
 #current state of hand postions
 hand_state = real_hand.get_state()
 print(f"hand state {hand_state}")
