@@ -17,7 +17,7 @@ model.set_classes(["person", "mouse", "keyboard", "guitar"])
 # ================================
 
 # Initalize the webcam
-cap = cv2.VideoCapture(0, cv2.CAP_DSHOW)
+cap = cv2.VideoCapture(0, cv2.CAP_V4L2)
 
 # Check if the webcam is opened correctly
 if not cap.isOpened():

@@ -7,6 +7,6 @@ results = model("https://ultralytics.com/images/bus.jpg", save = True)  # predic
 
 for r in results:
     # This allows you to specify any valid system path and filename
-    r.save(filename="Yolo26_Segmentation/bus_result.jpg")
+    r.save(filename="bus_result.jpg")
 
 print("yay")

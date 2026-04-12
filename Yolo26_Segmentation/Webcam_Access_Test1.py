@@ -1,7 +1,7 @@
 import cv2 # import Open Source Computer Vision Library
 
 # Initialize camera using DirectShow backend (0 is usually the default built-in camera)
-cap = cv2.VideoCapture(0, cv2.CAP_DSHOW) # or cv2.CAP_MSMF
+cap = cv2.VideoCapture(0, cv2.CAP_V4L2) # or cv2.CAP_MSMF
 
 
 # Check if the webcam is opened correctly
