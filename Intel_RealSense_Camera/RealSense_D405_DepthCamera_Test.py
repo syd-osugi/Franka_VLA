@@ -25,8 +25,8 @@ try:
         depth_image = np.asanyarray(depth_frame.get_data())
         
         # Display
-        #cv2.imshow('D405 Stream', color_image)
-        cv2.imshow('D405 Stream', depth_image)
+        cv2.imshow('D405 Stream', color_image)
+        #cv2.imshow('D405 Stream', depth_image)
         if cv2.waitKey(1) == ord('q'):
             break
 finally:
