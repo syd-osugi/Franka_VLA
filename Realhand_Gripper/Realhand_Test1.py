@@ -1,7 +1,7 @@
 import time
-
 from RealHand.real_hand_api import RealHandApi
 from RealHand.utils.load_write_yaml import LoadWriteYaml
+
 # def main():
 #     # Initialize API. hand_type: left or right. hand_joint: L7, L10, L20, or L25
 #     real_hand = RealHandApi(hand_type="right", hand_joint="L6")
@@ -44,46 +44,59 @@ if right_hand == True:
     can = setting['REAL_HAND']['RIGHT_HAND']['CAN']
     modbus = setting['REAL_HAND']['RIGHT_HAND']['MODBUS']
 
-# allows us to use https://github.com/realhand-dev/realhand-python-sdk/blob/main/doc/API-Reference.md
+# Allows us to use https://github.com/realhand-dev/realhand-python-sdk/blob/main/doc/API-Reference.md
 real_hand = RealHandApi(hand_joint=hand_joint, hand_type=hand_type, modbus=modbus, can=can)
 
-# change speed of 
+###########################
+# API Command Control Test
+###########################
+
+# Change set movement speed
+# speed: A list containing speed data. Each element corresponds to the speed of each joint.
+# If it is L7, it is 7 elements, corresponding to each motor speed.
+# Range of each element value: 0~255.
 speed = [10, 10, 10, 10, 10, 10]
 real_hand.set_speed(speed)
-#get speed data
-real_hand.get_speed()
+# Retrieves the currently set speed values.
+set_speed = real_hand.get_speed()
+print(f"Set speed is {set_speed}.")
 
-# fingie torque limit
+# Change set torque limit, used to control gripping force.
+# torque: A list containing force data. Each element corresponds to the force value of each finger.
+# If it is L7, it is 7 elements, corresponding to each motor force value.
+# Range of each element value: 0~255.
 torque = [10, 10, 10, 10, 10, 10]
 real_hand.set_torque(torque)
-#get torque
-torque_state = real_hand.get_torque()
-print(f"torque state {torque_state}")
+# Retrieves current finger torque list information.
+set_torque = real_hand.get_torque()
+print(f"Set torque is {set_torque}.")
 
 # NOT WORKING
-#force = [] # [[Normal Pressure], [Tangential Pressure], [Tangential Direction], [Proximity Induction]]
-force_state = real_hand.get_force()
-print(f"force state {force_state}")
+# Retrieves comprehensive hand sensor data, including normal pressure, tangential pressure, tangential direction, and proximity induction.
+# pressure = [] # [[Normal Pressure], [Tangential Pressure], [Tangential Direction], [Proximity Induction]]
+# For each category, elements correspond to: Thumb, Index, Middle, Ring, Pinky.
+pressure_state = real_hand.get_force()
+print(f"Pressure state is {pressure_state}.")
 
-# send position via matrix for position
+# Set joint position
+# Sets the target positions of the joints, used to control finger movement.
 position_pointing = [0, 18, 255, 0, 0, 0]
 real_hand.finger_move(position_pointing)
-time.sleep(2) # allow for hand to move before begining next move
-position_openhand = [250, 250, 250, 250, 250, 250]
-real_hand.finger_move(position_openhand) # always end in open position for convenience
-#current state of hand postions
-hand_state = real_hand.get_state()
-print(f"hand state {hand_state}")
+time.sleep(2) # Allow for hand to move before begining next move
 
-#get motor temperature of the current joints
+position_openhand = [250, 250, 250, 250, 250, 250]
+real_hand.finger_move(position_openhand) # Always end in open position for convenience
+
+# Current state of hand postions
+hand_state = real_hand.get_state()
+print(f"Hand state is {hand_state}.")
+
+# Retrieves the motor temperature of the current joints.
 temp_state = real_hand.get_temperature()
-print(f"temp state {temp_state}")
-#get motor fault codes
+print(f"Motor temp state is {temp_state}.")
+# Retrieves current joint motor faults.
 # 0 means normal; 1: Current Overload; 2: Over Temperature; 3: Encoding Error; 4: Over/Under Voltage.
 fault_state = real_hand.get_fault()
-print(f"fault state {fault_state}")
-
-
-
+print(f"Motor fault state is {fault_state}.")
 
 print('We made it')
